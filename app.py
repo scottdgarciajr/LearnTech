@@ -2,11 +2,12 @@
 from flask import Flask, render_template, request
 import openai
 import json
-
-app = Flask(__name__)
-
+import os
 
 
+
+current_directory = os.path.dirname(os.path.abspath(__file__))
+app = Flask(__name__, template_folder=current_directory)
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -14,7 +15,7 @@ def index():
 @app.route('/generate', methods=['POST'])
 def generate():
     # Configure OpenAI API
-    openai.api_key = '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'
+    openai.api_key = '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'
     topic = request.form['topic']
     skill_level = request.form['skill_level']
 
@@ -35,7 +36,7 @@ def generate():
 @app.route('/generate_project_ideas', methods=['POST'])
 def generate_project_ideas():
     # Configure OpenAI API
-    openai.api_key = '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'
+    openai.api_key = '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'
     # Parse the JSON payload
     data = json.loads(request.data)
     skill = data['skill']
@@ -49,7 +50,7 @@ def generate_project_ideas():
 
 def generate_project_ideas(skill, level):
     # Configure OpenAI API
-    openai.api_key = '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'
+    openai.api_key = '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'
     prompt = f"Generate 10 project ideas that involve {skill} at a {level} level."
     response = openai.Completion.create(
         engine="text-davinci-002",
@@ -66,7 +67,7 @@ def generate_project_ideas(skill, level):
 @app.route('/generate_project_description', methods=['POST'])
 def generate_project_description(idea):
     # Configure OpenAI API
-    openai.api_key = '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'
+    openai.api_key = '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'
     prompt = f"Generate a project description for a {idea}."
     response = openai.Completion.create(
         engine="text-davinci-002",
@@ -82,7 +83,7 @@ def generate_project_description(idea):
 @app.route('/generate_steps', methods=['POST'])
 def generate_steps(project, description):
     # Configure OpenAI API
-    openai.api_key = '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'
+    openai.api_key = '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'
     # Define the prompt for the current project idea and description
     prompt = f"Generate a list of steps to complete the project '{project}' and {description} and save it to an array."
     
@@ -115,7 +116,7 @@ import openai
 def generate_walkthrough(project, description, step):
     # Define the prompt for the current step
     # Configure OpenAI API
-    openai.api_key = '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'
+    openai.api_key = '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'
     prompt = f"Provide a walkthrough of how to complete the step '{step}' for the project '{project}' and {description}."
     
     # Generate text using OpenAI's Completion module
@@ -139,7 +140,7 @@ def generate_walkthrough(project, description, step):
 @app.route('/generate_walkthroughs', methods=['POST'])
 def generate_walkthroughs():
     # Configure OpenAI API
-    openai.api_key = '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'
+    openai.api_key = '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'
     # Parse the JSON payload
     data = json.loads(request.data)
     project = data['project']
