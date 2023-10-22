@@ -102,7 +102,7 @@
         }
         function onItemClicked(selectedItem) {
   if (selectedItem !== "Beginner" && selectedItem !== "Intermediate" && selectedItem !== "Expert") {
-
+    alert("loading...");
 
     let newItems = [];
   const xhr = new XMLHttpRequest();
@@ -112,16 +112,7 @@
   if (xhr.status === 200) {
     const walkthroughs = JSON.parse(xhr.responseText);
     console.log(walkthroughs);
-    newItems = walkthroughs.map((walkthrough) => {
-      return {
-        text: walkthrough,
-        action: () => {
-          // Do something when the button is clicked
-          console.log(`Button for ${walkthrough} was clicked`);
-        }
-      };
-    });
-    showDropdown(newItems);
+    showDropdown(walkthroughs);
   } else {
     console.error(xhr.statusText);
   }
@@ -133,6 +124,7 @@
   xhr.send(JSON.stringify({ project: selectedItem }));
 
   } else {
+    alert("generating ideas");
     let newItems = [];
     const xhr = new XMLHttpRequest();
     xhr.open("POST", "/generate_project_ideas");
