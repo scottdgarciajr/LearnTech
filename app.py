@@ -27,12 +27,11 @@ These projects are suitable for beginners in data science and can be implemented
 
 from flask import Flask, render_template, request
 import openai
-import genWalkthrough
+import json
 
 app = Flask(__name__)
 
-# Configure OpenAI API
-openai.api_key = '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'
+
 
 @app.route('/')
 def index():
@@ -40,29 +39,46 @@ def index():
 
 @app.route('/generate', methods=['POST'])
 def generate():
+    # Configure OpenAI API
+    openai.api_key = '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'
     topic = request.form['topic']
     skill_level = request.form['skill_level']
 
     # Make a request to the OpenAI API
     response = openai.Completion.create(
-        engine='davinci-3',
-        prompt=f"I want to create a project on {topic} and my skill level is {skill_level}.",
+        engine="text-davinci-002",
+        prompt=prompt,
         max_tokens=100,
         n=1,
         stop=None,
-        temperature=0.7
+        temperature=0.5,
     )
 
     project_ideas = response.choices[0].text.strip()
 
     return render_template('result.html', project_ideas=project_ideas)
 
-
 @app.route('/generate_project_ideas', methods=['POST'])
+def generate_project_ideas():
+    # Configure OpenAI API
+    openai.api_key = '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'
+    # Parse the JSON payload
+    data = json.loads(request.data)
+    skill = data['skill']
+    level = data['level']
+
+    # Generate project ideas using OpenAI's GPT-3 API
+    ideas = generate_project_ideas(skill, level)
+
+    # Return the project ideas as a JSON response
+    return json.dumps(ideas)
+
 def generate_project_ideas(skill, level):
+    # Configure OpenAI API
+    openai.api_key = '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'
     prompt = f"Generate 10 project ideas that involve {skill} at a {level} level."
     response = openai.Completion.create(
-        engine="davinci-codex",
+        engine="text-davinci-002",
         prompt=prompt,
         max_tokens=1024,
         n=1,
@@ -72,11 +88,14 @@ def generate_project_ideas(skill, level):
     ideas = response.choices[0].text.strip().split("\n")
     return ideas
 
+
 @app.route('/generate_project_description', methods=['POST'])
 def generate_project_description(idea):
+    # Configure OpenAI API
+    openai.api_key = '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'
     prompt = f"Generate a project description for a {idea} at a beginner/intermediate/expert level."
     response = openai.Completion.create(
-        engine="davinci-codex",
+        engine="text-davinci-002",
         prompt=prompt,
         max_tokens=1024,
         n=1,
@@ -88,6 +107,8 @@ def generate_project_description(idea):
 
 @app.route('/generate_steps', methods=['POST'])
 def generate_steps(project, description):
+    # Configure OpenAI API
+    openai.api_key = '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'
     # Define the prompt for the current project idea and description
     prompt = f"Generate a list of steps to complete the project '{project}' and {description} and save it to an array."
     
@@ -117,6 +138,8 @@ import openai
 
 def generate_walkthrough(project, description, step):
     # Define the prompt for the current step
+    # Configure OpenAI API
+    openai.api_key = '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'
     prompt = f"Provide a walkthrough of how to complete the step '{step}' for the project '{project}' and {description}."
     
     # Generate text using OpenAI's Completion module
