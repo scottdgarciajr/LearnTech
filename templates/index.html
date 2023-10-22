@@ -100,42 +100,61 @@
                 dropdown.appendChild(resultItem);
             });
         }
-
         function onItemClicked(selectedItem) {
-            // Replace the items with 10 new items based on the selection
-            // let newItems = [];
-            // switch (selectedItem) {
-            //     case "Beginner":
-            //         newItems = ["Beginner Project 1", "Beginner Project 2", "Beginner Project 3", "Beginner Project 4", "Beginner Project 5", "Beginner Project 6", "Beginner Project 7", "Beginner Project 8", "Beginner Project 9", "Beginner Project 10"];
-            //         break;
-            //     case "Intermediate":
-            //         newItems = ["Intermediate Project 1", "Intermediate Project 2", "Intermediate Project 3", "Intermediate Project 4", "Intermediate Project 5", "Intermediate Project 6", "Intermediate Project 7", "Intermediate Project 8", "Intermediate Project 9", "Intermediate Project 10"];
-            //         break;
-            //     case "Expert":
-            //         newItems = ["Expert Project 1", "Expert Project 2", "Expert Project 3", "Expert Project 4", "Expert Project 5", "Expert Project 6", "Expert Project 7", "Expert Project 8", "Expert Project 9", "Expert Project 10"];
-            //         break;
-            // }
-            // showDropdown(newItems);
-            let newItems = [];
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", "/generate_project_ideas");
-            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-            xhr.onload = function() {
-                if (xhr.status === 200) {
-                // Display the project ideas on the webpage
-                const projectIdeas = JSON.parse(xhr.responseText);
-                console.log(projectIdeas);
-                newItems = projectIdeas;
-                showDropdown(newItems);
-                } else {
-                console.error(xhr.statusText);
-                }
-            };
-            xhr.onerror = function() {
-                console.error(xhr.statusText);
-            };
-            xhr.send(JSON.stringify({ skill: inputValue, level: selectedItem }));
+  if (selectedItem !== "Beginner" && selectedItem !== "Intermediate" && selectedItem !== "Expert") {
+
+
+    let newItems = [];
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", "/generate_walkthroughs");
+  xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+  xhr.onload = function() {
+  if (xhr.status === 200) {
+    const walkthroughs = JSON.parse(xhr.responseText);
+    console.log(walkthroughs);
+    newItems = walkthroughs.map((walkthrough) => {
+      return {
+        text: walkthrough,
+        action: () => {
+          // Do something when the button is clicked
+          console.log(`Button for ${walkthrough} was clicked`);
         }
+      };
+    });
+    showDropdown(newItems);
+  } else {
+    console.error(xhr.statusText);
+  }
+};
+
+  xhr.onerror = function() {
+    console.error(xhr.statusText);
+  };
+  xhr.send(JSON.stringify({ project: selectedItem }));
+
+  } else {
+    let newItems = [];
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "/generate_project_ideas");
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        // Display the project ideas on the webpage
+        const projectIdeas = JSON.parse(xhr.responseText);
+        console.log(projectIdeas);
+        newItems = projectIdeas;
+        showDropdown(newItems);
+      } else {
+        console.error(xhr.statusText);
+      }
+    };
+    xhr.onerror = function() {
+      console.error(xhr.statusText);
+    };
+    xhr.send(JSON.stringify({ skill: inputValue, level: selectedItem }));
+  }
+}
+
     </script>
 </body>
 </html>

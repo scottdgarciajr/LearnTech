@@ -40,7 +40,7 @@ def index():
 @app.route('/generate', methods=['POST'])
 def generate():
     # Configure OpenAI API
-    openai.api_key = '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'
+    openai.api_key = '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'
     topic = request.form['topic']
     skill_level = request.form['skill_level']
 
@@ -61,7 +61,7 @@ def generate():
 @app.route('/generate_project_ideas', methods=['POST'])
 def generate_project_ideas():
     # Configure OpenAI API
-    openai.api_key = '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'
+    openai.api_key = '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'
     # Parse the JSON payload
     data = json.loads(request.data)
     skill = data['skill']
@@ -75,7 +75,7 @@ def generate_project_ideas():
 
 def generate_project_ideas(skill, level):
     # Configure OpenAI API
-    openai.api_key = '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'
+    openai.api_key = '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'
     prompt = f"Generate 10 project ideas that involve {skill} at a {level} level."
     response = openai.Completion.create(
         engine="text-davinci-002",
@@ -92,8 +92,8 @@ def generate_project_ideas(skill, level):
 @app.route('/generate_project_description', methods=['POST'])
 def generate_project_description(idea):
     # Configure OpenAI API
-    openai.api_key = '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'
-    prompt = f"Generate a project description for a {idea} at a beginner/intermediate/expert level."
+    openai.api_key = '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'
+    prompt = f"Generate a project description for a {idea}."
     response = openai.Completion.create(
         engine="text-davinci-002",
         prompt=prompt,
@@ -108,7 +108,7 @@ def generate_project_description(idea):
 @app.route('/generate_steps', methods=['POST'])
 def generate_steps(project, description):
     # Configure OpenAI API
-    openai.api_key = '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'
+    openai.api_key = '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'
     # Define the prompt for the current project idea and description
     prompt = f"Generate a list of steps to complete the project '{project}' and {description} and save it to an array."
     
@@ -133,13 +133,15 @@ def generate_steps(project, description):
     return steps
 
 
+
+
 import openai
 
 
 def generate_walkthrough(project, description, step):
     # Define the prompt for the current step
     # Configure OpenAI API
-    openai.api_key = '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'
+    openai.api_key = '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'
     prompt = f"Provide a walkthrough of how to complete the step '{step}' for the project '{project}' and {description}."
     
     # Generate text using OpenAI's Completion module
@@ -161,20 +163,43 @@ def generate_walkthrough(project, description, step):
 
 
 @app.route('/generate_walkthroughs', methods=['POST'])
-def generate_walkthroughs(project, description, steps):
-    # Create an empty string to store the walkthroughs
-    walkthroughs = ""
+def generate_walkthroughs():
+    # Configure OpenAI API
+    openai.api_key = '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'
+    # Parse the JSON payload
+    data = json.loads(request.data)
+    project = data['project']
+
+    # Generate project ideas using OpenAI's GPT-3 API
+    ideas = generate_walkthroughs(project)
+
+    # Return the project ideas as a JSON response
+    return json.dumps(ideas)
+
+
+def generate_walkthroughs(project):
+    description = generate_project_description(project)
+    # Create an empty list to store the walkthroughs
+    walkthroughs = []
+    steps = generate_steps(project, description)
 
     # Generate a walkthrough for each step
     for step in steps:
         # Generate the walkthrough for the current step
         walkthrough = generate_walkthrough(project, description, step)
 
-        # Add the walkthrough to the string
-        walkthroughs += f"Step: {step}\n{walkthrough}\n\n"
+        # Create a new list for the current walkthrough
+        current_walkthrough = [step, walkthrough]
 
-    # Return the string of walkthroughs
+        # Append the new list to the main list of walkthroughs
+        walkthroughs.append(current_walkthrough)
+
+    # Return the list of walkthroughs
     return walkthroughs
+
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
