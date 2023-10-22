@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Centered Input Box with Dropdown</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column; /* Stack elements vertically */
+            background-color: #1A0126; /* Set the background color */
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            color: white; /* Set text color to white */
+        }
+
+        .container {
+            text-align: center;
+            margin-top: -60px; /* Move everything up */
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 50px; /* Add spacing between App name and Question */
+        }
+
+        h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .input-container {
+            text-align: left; /* Align the search bar and submit button to the left */
+        }
+
+        .input-box {
+            width: 300px;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        .submit-button {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+
+        #dropdown {
+            display: none;
+            position: absolute;
+            width: 300px;
+        }
+
+        .result-item {
+            padding: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-align: left; /* Left-align the items */
+            width: 100%; /* Set the width of the items to match the search bar */
+        }
+
+        .result-item:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SkillCraft</h1>
+        <h2>What Project Would You Like To Pursue?</h2>
+        <div class="input-container">
+            <form id="myForm">
+                <input type="text" class="input-box" placeholder="Search a Project Idea">
+                <input type="submit" value="Submit" class="submit-button">
+            </form>
+        </div>
+        <div id="dropdown"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById("myForm");
+        const dropdown = document.getElementById("dropdown");
+
+        form.addEventListener("submit", function(event) {
+            event.preventDefault();
+            // Display the dropdown with 3 clickable and hoverable items after submission
+            showDropdown(["Beginner", "Intermediate", "Expert"]);
+        });
+
+        function showDropdown(items) {
+            dropdown.style.display = "block";
+            dropdown.innerHTML = ""; // Clear previous options
+
+            items.forEach(itemText => {
+                const resultItem = document.createElement("div");
+                resultItem.classList.add("result-item");
+                resultItem.textContent = itemText;
+                resultItem.addEventListener("click", () => onItemClicked(itemText));
+                dropdown.appendChild(resultItem);
+            });
+        }
+
+        function onItemClicked(selectedItem) {
+            // Replace the items with 10 new items based on the selection
+            let newItems = [];
+            switch (selectedItem) {
+                case "Beginner":
+                    newItems = ["Beginner Project 1", "Beginner Project 2", "Beginner Project 3", "Beginner Project 4", "Beginner Project 5", "Beginner Project 6", "Beginner Project 7", "Beginner Project 8", "Beginner Project 9", "Beginner Project 10"];
+                    break;
+                case "Intermediate":
+                    newItems = ["Intermediate Project 1", "Intermediate Project 2", "Intermediate Project 3", "Intermediate Project 4", "Intermediate Project 5", "Intermediate Project 6", "Intermediate Project 7", "Intermediate Project 8", "Intermediate Project 9", "Intermediate Project 10"];
+                    break;
+                case "Expert":
+                    newItems = ["Expert Project 1", "Expert Project 2", "Expert Project 3", "Expert Project 4", "Expert Project 5", "Expert Project 6", "Expert Project 7", "Expert Project 8", "Expert Project 9", "Expert Project 10"];
+                    break;
+            }
+            showDropdown(newItems);
+        }
+    </script>
+</body>
+</html>
